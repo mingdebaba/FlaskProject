@@ -1,9 +1,6 @@
-
+#encoding:utf-8
 from flask import Blueprint
-
-bp = Blueprint("common", __name__)
-
-
+bp=Blueprint("common", __name__)
 @bp.route("/common")
 def index():
-    return "this is common-part"
+    return  "这是公共部分首页！"
