@@ -1,9 +1,9 @@
-{% extends "admin/base.html" %}
-{%  block head %}
-   <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
+{% extends "admin.base.html" %}
+{% block head %}
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-<script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    　<script type="text/javascript" src="{{url_for('static',filename='lib/jquery/1.9.1/jquery.min.js')}}"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='lib/jquery/1.9.1/jquery.min.js')}}"></script>
     <style>
         .form_div{
         width: 400px;
@@ -23,8 +23,9 @@
                 color:green;
             }
          </style>
+
 {% endblock %}
-{% block title %}佳奇CMS系统-个人详情页{% endblock %}
+{% block title %}佳奇CMS系统-修改密码{% endblock %}
 {% block body %}
 {% include 'admin/edit_pwd_details.html' %}
 {% endblock %}

@@ -1,10 +1,10 @@
- <script>
+<script>
  $(function() {
                 var checkok1=false;
                 var checkok2=false;
                 var checkok3=false;
  //验证旧密码
-     $("input[name='oldpwd']").blur(function () {
+$("input[name='oldpwd']").blur(function () {
              var pwd=$("input[name='oldpwd']").val();
              var dd = {'oldpwd':pwd};
                $.ajax({
@@ -24,7 +24,7 @@
 
          });
      })
-	 //验证新密码
+     //验证新密码
           $('input[name="newpwd1"]').focus(function(){
                     $("#newpwd1").next().text('密码应该为6-15位之间').removeClass('state1').addClass('state2');
                 }).blur(function(){
@@ -34,9 +34,9 @@
                     }else{
                         $("#newpwd1").next().text('密码应该为6-20位之间').removeClass('state1').addClass('state3');
                     }
-                     
+
                 });
-	   //再次验证新密码
+//再次验证新密码
                     $('input[name="newpwd2"]').focus(function(){
                     $(this).next().text('两次输入密码需要一样').removeClass('state1').addClass('state2');
                 }).blur(function(){
@@ -57,8 +57,7 @@
                     }
         });
  })
-
- </script>
+</script>
 <div class="container">
     <div class="form_div">
       <form action="{{ url_for('admin.editpwd') }}" class="form-signin" role="form" method='post'>
@@ -82,4 +81,3 @@
 {% endif %}
         </div>
     </div>
-

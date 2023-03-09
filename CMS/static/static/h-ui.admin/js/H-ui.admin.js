@@ -1,9 +1,9 @@
 /* -----------H-ui前端框架-------------
-* H-ui.admin.js v3.1
+* H-ui.admin.js v3.1.4
 * http://www.h-ui.net/
 * Created & Modified by guojunhui
-* Date modified 2017.02.03
-* Copyright 2013-2017 北京颖杰联创科技有限公司 All rights reserved.
+* Date modified 2019.01.21
+* Copyright 2013-2019 北京颖杰联创科技有限公司 All rights reserved.
 * Licensed under MIT license.
 * http://opensource.org/licenses/MIT
 */
@@ -34,14 +34,14 @@ function tabNavallwidth(){
 function Huiasidedisplay(){
 	if($(window).width()>=768){
 		$(".Hui-aside").show();
-	} 
+	}
 }
 /*获取皮肤cookie*/
 function getskincookie(){
 	var v = $.cookie("Huiskin");
 	var hrefStr=$("#skin").attr("href");
 	if(v==null||v==""){
-		v="default";
+		v="red";
 	}
 	if(hrefStr!=undefined){
 		var hrefRes=hrefStr.substring(0,hrefStr.lastIndexOf('skin/'))+'skin/'+v+'/skin.css';
@@ -81,9 +81,9 @@ function Hui_admin_tab(obj){
 		min_titleList();
 	}
 	else{
-		show_navLi.removeClass("active").eq(bStopIndex).addClass("active");			
+		show_navLi.removeClass("active").eq(bStopIndex).addClass("active");
 		iframe_box.find(".show_iframe").hide().eq(bStopIndex).show().find("iframe").attr("src",href);
-	}	
+	}
 }
 
 /*最新tab标题栏列表*/
@@ -103,31 +103,30 @@ function creatIframe(href,titleName){
 		$tabNavWp = topWindow.find(".Hui-tabNav-wp"),
 		$tabNavmore =topWindow.find(".Hui-tabNav-more");
 	var taballwidth=0;
-		
-	show_nav.find('li').removeClass("active");	
+
+	show_nav.find('li').removeClass("active");
 	show_nav.append('<li class="active"><span data-href="'+href+'">'+titleName+'</span><i></i><em></em></li>');
-	if('function'==typeof $('#min_title_list li').contextMenu){
-		$("#min_title_list li").contextMenu('Huiadminmenu', {
-			bindings: {
-				'closethis': function(t) {
-					var $t = $(t);				
-					if($t.find("i")){
-						$t.find("i").trigger("click");
-					}
-				},
-				'closeall': function(t) {
-					$("#min_title_list li i").trigger("click");
-				},
-			}
-		});
-	}else {
-		
-	}	
+  console.log('1');
+
+  show_nav.find('li').contextMenu('Huiadminmenu', {
+    bindings: {
+      'closethis': function(t) {
+        var $t = $(t);
+        if($t.find("i")){
+          $t.find("i").trigger("click");
+        }
+      },
+      'closeall': function(t) {
+        show_nav.find('li i').trigger("click");
+      },
+    }
+  });
+
 	var $tabNavitem = topWindow.find(".acrossTab li");
 	if (!$tabNav[0]){return}
 	$tabNavitem.each(function(index, element) {
-        taballwidth+=Number(parseFloat($(this).width()+60))
-    });
+    taballwidth+=Number(parseFloat($(this).width()+60))
+  });
 	$tabNav.width(taballwidth+25);
 	var w = $tabNavWp.width();
 	if(taballwidth+25>w){
@@ -135,15 +134,14 @@ function creatIframe(href,titleName){
 	else{
 		$tabNavmore.hide();
 		$tabNav.css({left:0})
-	}	
+	}
 	iframeBox.hide();
-	iframe_box.append('<div class="show_iframe"><div class="loading"></div><iframe frameborder="0" src='+href+'></iframe></div>');
+	iframe_box.append('<div class="show_iframe"><div class="loading"></div><iframe data-scrollTop="0" frameborder="0" src='+href+'></iframe></div>');
 	var showBox=iframe_box.find('.show_iframe:visible');
 	showBox.find('iframe').load(function(){
 		showBox.find('.loading').hide();
 	});
 }
-
 
 
 /*关闭iframe*/
@@ -156,7 +154,8 @@ function removeIframe(){
 		i = showTab.index();
 	tab.eq(i-1).addClass("active");
 	tab.eq(i).remove();
-	iframe.eq(i-1).show();	
+	iframe.eq(i-1).show();
+	$(iframe.eq(i-1).find("iframe")[0].contentWindow.document).scrollTop(iframe.eq(i-1).find("iframe").attr("data-scrollTop"));
 	iframe.eq(i).remove();
 }
 
@@ -231,7 +230,9 @@ function getHTMLDate(obj) {
     _ww = weekday[d.getDay()];
     obj.html(_yy + "年" + _mm + "月" + _dd + "日 " + _ww);
 };
-
+function toNavPos(){
+	oUl.stop().animate({'left':-num*100},100);
+}
 $(function(){
 	getHTMLDate($("#top_time"));
 	getskincookie();
@@ -244,7 +245,7 @@ $(function(){
 			Huiasidedisplay();
 		},500);
 	});
-	
+
 	$(".nav-toggle").click(function(){
 		$(".Hui-aside").slideToggle();
 	});
@@ -258,12 +259,14 @@ $(function(){
 		titCell:'.menu_dropdown dl dt',
 		mainCell:'.menu_dropdown dl dd',
 	});
-	
+
 	/*选项卡导航*/
 	$(".Hui-aside").on("click",".menu_dropdown a",function(){
 		Hui_admin_tab(this);
+		$(".Hui-aside").find(".menu_dropdown dl dd ul li").removeClass("current");
+		$(this).parent().addClass("current");
 	});
-	
+
 	$(document).on("click","#min_title_list li",function(){
 		var bStopIndex=$(this).index();
 		var iframe_box=$("#iframe_box");
@@ -273,7 +276,7 @@ $(function(){
 	$(document).on("click","#min_title_list li i",function(){
 		var aCloseIndex=$(this).parents("li").index();
 		$(this).parent().remove();
-		$('#iframe_box').find('.show_iframe').eq(aCloseIndex).remove();	
+		$('#iframe_box').find('.show_iframe').eq(aCloseIndex).remove();
 		num==0?num=0:num--;
 		tabNavallwidth();
 	});
@@ -282,7 +285,7 @@ $(function(){
 		var iframe_box=$("#iframe_box");
 		if(aCloseIndex>0){
 			$(this).remove();
-			$('#iframe_box').find('.show_iframe').eq(aCloseIndex).remove();	
+			$('#iframe_box').find('.show_iframe').eq(aCloseIndex).remove();
 			num==0?num=0:num--;
 			$("#min_title_list li").removeClass("active").eq(aCloseIndex-1).addClass("active");
 			iframe_box.find(".show_iframe").hide().eq(aCloseIndex-1).show();
@@ -292,7 +295,7 @@ $(function(){
 		}
 	});
 	tabNavallwidth();
-	
+
 	$('#js-tabNav-next').click(function(){
 		num==oUl.find('li').length-1?num=oUl.find('li').length-1:num++;
 		toNavPos();
@@ -301,11 +304,7 @@ $(function(){
 		num==0?num=0:num--;
 		toNavPos();
 	});
-	
-	function toNavPos(){
-		oUl.stop().animate({'left':-num*100},100);
-	}
-	
+
 	/*换肤*/
 	$("#Hui-skin .dropDown-menu a").click(function(){
 		var v = $(this).attr("data-val");
@@ -314,4 +313,4 @@ $(function(){
 		var hrefRes=hrefStr.substring(0,hrefStr.lastIndexOf('skin/'))+'skin/'+v+'/skin.css';
 		$(window.frames.document).contents().find("#skin").attr("href",hrefRes);
 	});
-}); 
+});
